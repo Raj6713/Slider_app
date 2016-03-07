@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_file_streaming" default="compile.module.file_streaming">
+  <dirname property="module.file_streaming.basedir" file="${ant.file.module_file_streaming}"/>
+  
+  <property name="module.jdk.home.file_streaming" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.file_streaming" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.file_streaming" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.file_streaming" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
+  
+  <property name="file_streaming.output.dir" value="${module.file_streaming.basedir}/out/production/File_streaming"/>
+  <property name="file_streaming.testoutput.dir" value="${module.file_streaming.basedir}/out/test/File_streaming"/>
+  
+  <path id="file_streaming.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="file_streaming.module.production.classpath">
+    <path refid="${module.jdk.classpath.file_streaming}"/>
+  </path>
+  
+  <path id="file_streaming.runtime.production.module.classpath">
+    <pathelement location="${file_streaming.output.dir}"/>
+  </path>
+  
+  <path id="file_streaming.module.classpath">
+    <path refid="${module.jdk.classpath.file_streaming}"/>
+    <pathelement location="${file_streaming.output.dir}"/>
+  </path>
+  
+  <path id="file_streaming.runtime.module.classpath">
+    <pathelement location="${file_streaming.testoutput.dir}"/>
+    <pathelement location="${file_streaming.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.file_streaming">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.file_streaming">
+    <patternset refid="excluded.from.module.file_streaming"/>
+  </patternset>
+  
+  <path id="file_streaming.module.sourcepath">
+    <dirset dir="${module.file_streaming.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.file_streaming" depends="compile.module.file_streaming.production,compile.module.file_streaming.tests" description="Compile module File_streaming"/>
+  
+  <target name="compile.module.file_streaming.production" depends="register.custom.compilers" description="Compile module File_streaming; production classes">
+    <mkdir dir="${file_streaming.output.dir}"/>
+    <javac2 destdir="${file_streaming.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.file_streaming}/javac">
+      <compilerarg line="${compiler.args.file_streaming}"/>
+      <bootclasspath refid="file_streaming.module.bootclasspath"/>
+      <classpath refid="file_streaming.module.production.classpath"/>
+      <src refid="file_streaming.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.file_streaming"/>
+    </javac2>
+    
+    <copy todir="${file_streaming.output.dir}">
+      <fileset dir="${module.file_streaming.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.file_streaming.tests" depends="register.custom.compilers,compile.module.file_streaming.production" description="compile module File_streaming; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.file_streaming" description="cleanup module">
+    <delete dir="${file_streaming.output.dir}"/>
+    <delete dir="${file_streaming.testoutput.dir}"/>
+  </target>
+</project>
